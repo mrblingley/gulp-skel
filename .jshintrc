@@ -8,6 +8,9 @@
     "beforeEach" : false,
     "waits"      : false,
     "waitsFor"   : false,
+	"require"    : false,
+	"module"     : false,
+	"exports"    : false,
     "runs"       : false
   },
 
@@ -19,7 +22,6 @@
   "devel"     : true,
   "eqeqeq"    : true,
   "eqnull"    : false,
-  "es5"       : true,
   "evil"      : false,
   "forin"     : true,
   "immed"     : true,
@@ -38,6 +40,7 @@
   "quotmark"  : "single",
   "regexp"    : false,
   "strict"    : true,
+  "globalstrict"    : true,
   "sub"       : true,
   "trailing"  : true,
   "undef"     : true,

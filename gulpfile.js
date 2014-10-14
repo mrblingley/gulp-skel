@@ -1,17 +1,19 @@
+'use strict';
 // Load plugins
 var gulp = require('gulp'),
-    sass = require('gulp-ruby-sass'),
+    sass = require('gulp-sass'),
+    pixrem = require('gulp-pixrem'),
     autoprefixer = require('gulp-autoprefixer'),
     minifycss = require('gulp-minify-css'),
     jshint = require('gulp-jshint'),
-    stripDebug= require('gulp-strip-debug')
+    stripDebug = require('gulp-strip-debug'),
     uglify = require('gulp-uglify'),
     imagemin = require('gulp-imagemin'),
     rename = require('gulp-rename'),
     clean = require('gulp-clean'),
-    concat = require('gulp-concat'),
     notify = require('gulp-notify'),
     cache = require('gulp-cache'),
+    browserify = require('gulp-browserify'),
     browserSync = require('browser-sync');
 
 gulp.task('browser-sync', function() {
@@ -38,11 +40,17 @@ gulp.task('images', function() {
     .pipe(notify({ message: 'Images task complete' }));
 });
 
-gulp.task('scripts', function() {
-  return gulp.src('src/scripts/**/*.js')
+gulp.task('script-syntax', function() {
+  return gulp.src('src/scripts/**/*')
     .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(concat('main.js'))
+});
+
+gulp.task('scripts', ['script-syntax'], function() {
+  return gulp.src('src/scripts/main.js')
+    .pipe(browserify({
+        transform: 'brfs'
+    }))
     .pipe(gulp.dest('dist/scripts'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(stripDebug())
@@ -66,7 +74,7 @@ gulp.task('styles', function() {
 });
 
 
-gulp.task('watch', function() {
+gulp.task('watch', ['images', 'scripts', 'styles', 'browser-sync'], function() {
   gulp.watch('src/images/**/*', ['images']);
   gulp.watch('src/scripts/**/*.js', ['scripts']);
   gulp.watch('src/styles/**/*.scss', ['styles']);
